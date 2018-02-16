@@ -9,7 +9,7 @@ The example uses [MySQL](https://github.com/kubernetes/charts/tree/master/stable
 run
 ```
 diff src/my_charts/values.yaml =(curl -s https://raw.githubusercontent.com/kubernetes/charts/master/stable/mysql/values.yaml)
+# `=(` is for zsh users; replace with `<(` if using bash
 ```
-* `=(` is for zsh users; replace with `<(` if using bash
 
 ![](resources/kibosh.png)
