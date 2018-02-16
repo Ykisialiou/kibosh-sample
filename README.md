@@ -1,5 +1,7 @@
 # kibosh-sample-tile
 
+![](resources/kibosh.png)
+
 1. Install [tile-generator](https://github.com/cf-platform-eng/tile-generator/)
 1. Build [kibosh.linux](https://github.com/cf-platform-eng/kibosh) and put the binary into the project root
     - `make linux` from the kibosh project root
@@ -12,4 +14,4 @@ diff src/my_charts/values.yaml =(curl -s https://raw.githubusercontent.com/kuber
 # `=(` is for zsh users; replace with `<(` if using bash
 ```
 
-![](resources/kibosh.png)
+
