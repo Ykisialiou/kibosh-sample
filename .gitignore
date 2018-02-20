@@ -1,5 +1,9 @@
 product/
 release/
 
+
 resources/kibosh.zip
 kibosh.linux
+
+local_dev.sh
+env

@@ -36,12 +36,17 @@ def delete():
 
 
 def get_credentials_from_env():
-    # todo: parse VCAP_SERVICES!
+    vcap_service = json.loads(os.environ['VCAP_SERVICES'])
+    my_sql = vcap_service['mysql'][0]
+    secrets = my_sql["credentials"]["secrets"][0]
+    services = my_sql["credentials"]["services"][0]
+
     return {
-        'host': 'localhost',
-        'database': 'kibosh',
+        'host': services["status"]["loadBalancer"]["ingress"][0]["ip"],
+        'database': 'my_db',
         'user': 'root',
-        'password': 'password',
+        'password': secrets["data"]["mysql-root-password"],
+        'port': services["spec"]["ports"][0]["port"]
     }
 
 
@@ -52,7 +57,7 @@ if __name__ == "__main__":
         app.db.insert("foo", "bar")
         app.db.insert("baz", "qux")
 
-        app.run(host='0.0.0.0', port=os.getenv('PORT', '8080'))
+        app.run(host='0.0.0.0', port=int(os.getenv('PORT', '8080')))
         print("Exited normally")
     except:
         print("* Exited with exception")

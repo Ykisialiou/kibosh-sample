@@ -1,6 +1,6 @@
 ---
 applications:
-- name: spacebears-consumer
+- name: kibosh-mysql-consumer
   buildpack: python_buildpack
   services:
-    - kibosh-mysql # cf create-service mysql default kibosh-mysql
+    - my-mysql # cf create-service mysql default my-mysql
