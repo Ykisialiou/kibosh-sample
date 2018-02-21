@@ -10,7 +10,7 @@
 The example uses [MySQL](https://github.com/kubernetes/charts/tree/master/stable/mysql) with minimal changes. MySQL service is exposed to external traffic via loadbalancer. To see the changeset,
 run
 ```
-diff src/my_charts/values.yaml =(curl -s https://raw.githubusercontent.com/kubernetes/charts/master/stable/mysql/values.yaml)
+diff  =(curl -s https://raw.githubusercontent.com/kubernetes/charts/master/stable/mysql/values.yaml) src/my_charts/values.yaml
 # `=(` is for zsh users; replace with `<(` if using bash
 ```
 
