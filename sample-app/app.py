@@ -1,6 +1,7 @@
 import os
 import traceback
 import json
+import prometheus_client
 
 import flask
 
@@ -8,8 +9,13 @@ import db
 
 app = flask.Flask(__name__)
 
+root_request_time = prometheus_client.Summary('root_processing_seconds', 'Time spent processing request')
+put_request_time = prometheus_client.Summary('put_processing_seconds', 'Time spent processing request')
+delete_request_time = prometheus_client.Summary('delete_processing_seconds', 'Time spent processing request')
+
 
 @app.route("/")
+@root_request_time.time()
 def index():
     error = flask.request.args.get("error")
     db_response = app.db.list()
@@ -18,6 +24,7 @@ def index():
 
 
 @app.route("/put", methods=['POST'])
+@put_request_time.time()
 def put():
     key = flask.request.form.get("key", "").strip()
     value = flask.request.form.get("value", "").strip()
@@ -29,10 +36,19 @@ def put():
 
 
 @app.route("/delete", methods=['POST'])
+@delete_request_time.time()
 def delete():
     key = flask.request.form.get("key", "").strip()
     app.db.delete(key)
     return flask.redirect("/")
+
+
+@app.route("/metrics")
+def metrics():
+    resp = flask.Response(prometheus_client.generate_latest())
+    resp.headers['Content-Type'] = 'text/plain'
+
+    return resp
 
 
 def get_credentials_from_env():
