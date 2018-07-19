@@ -1,0 +1,74 @@
+diff --git a/stable/mysql/.helmignore b/sample-charts/mysql/.helmignore
+index 6b8710a..1689a35 100644
+--- a/stable/mysql/.helmignore
++++ b/sample-charts/mysql/.helmignore
+@@ -1 +1,3 @@
+ .git
++
++images
+diff --git a/sample-charts/mysql/plans/medium.yaml b/sample-charts/mysql/plans/medium.yaml
+new file mode 100755
+index 0000000..15caa73
+--- /dev/null
++++ b/sample-charts/mysql/plans/medium.yaml
+@@ -0,0 +1,7 @@
++persistence:
++  size: 16Gi
++
++resources:
++  requests:
++    memory: 256Mi
++    cpu: 110m
+diff --git a/sample-charts/mysql/plans/small.yaml b/sample-charts/mysql/plans/small.yaml
+new file mode 100755
+index 0000000..0a95517
+--- /dev/null
++++ b/sample-charts/mysql/plans/small.yaml
+@@ -0,0 +1,4 @@
++resources:
++  requests:
++    memory: 128Mi
++    cpu: 100m
+diff --git a/sample-charts/mysql/plans.yaml b/sample-charts/mysql/plans.yaml
+new file mode 100755
+index 0000000..b2ad9f1
+--- /dev/null
++++ b/sample-charts/mysql/plans.yaml
+@@ -0,0 +1,6 @@
++- name: "small"
++  description: "default (small) plan for mysql"
++  file: "small.yaml"
++- name: "medium"
++  description: "medium sized plan for mysql"
++  file: "medium.yaml"
+diff --git a/stable/mysql/values.yaml b/sample-charts/mysql/values.yaml
+index fbe33ac..87db0ff 100644
+--- a/stable/mysql/values.yaml
++++ b/sample-charts/mysql/values.yaml
+@@ -21,7 +21,7 @@ imageTag: "5.7.14"
+
+ ## Create a database
+ ##
+-# mysqlDatabase:
++mysqlDatabase: my_db
+
+ ## Specify an imagePullPolicy (Required)
+ ## It's recommended to change this to 'Always' if the image tag is 'latest'
+@@ -63,7 +63,7 @@ persistence:
+   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+   ##   GKE, AWS & OpenStack)
+   ##
+-  # storageClass: "-"
++  storageClass: "standard"
+   accessMode: ReadWriteOnce
+   size: 8Gi
+
+@@ -106,7 +106,7 @@ metrics:
+ service:
+   ## Specify a service type
+   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services---service-types
+-  type: ClusterIP
++  type: LoadBalancer
+   port: 3306
+   # nodePort: 32000
+

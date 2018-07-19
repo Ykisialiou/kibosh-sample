@@ -3,4 +3,4 @@ applications:
 - name: kibosh-mysql-consumer
   buildpack: python_buildpack
   services:
-    - my-mysql # cf create-service mysql default my-mysql
+    - mysql-small

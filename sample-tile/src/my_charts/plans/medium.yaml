@@ -1,0 +1,11 @@
+## Persist data to a persistent volume
+persistence:
+  size: 16Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 110m
