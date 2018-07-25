@@ -1,0 +1,106 @@
+---
+name: bazaar-chart # By convention lowercase with dashes
+icon_file: resources/logo.png
+label: Bazaar
+description: Helm Charts Bazaar
+
+packages:
+- name: routing
+  type: bosh-release
+  path: resources/routing-0.179.0.tgz
+
+- name: bazaar
+  type: bosh-release
+  path: resources/kibosh-release-0.0.75.tgz
+  jobs:
+  - name: kibosh
+    templates:
+    - name: kibosh
+      release: kibosh
+    - name: bazaar
+      release: kibosh
+    - name: route_registrar
+      release: routing
+      consumes:
+        nats:
+          from: nats
+          deployment: (( ..cf.deployment_name ))
+    memory: 1024
+    ephemeral_disk: 4096
+    persistent_disk: 4096
+    instances: 1
+    cpu: 2
+    static_ip: 0
+    dynamic_ip: 1
+    default_internet_connected: false
+    max_in_flight: 1
+    properties:
+      route_registrar:
+        routes:
+        - name: bazaar-broker
+          port: 8080
+          registration_interval: 20s
+          uris:
+          - bazaar-broker.(( ..cf.cloud_controller.system_domain.value ))
+        - name: bazaar
+          port: 8081
+          registration_interval: 20s
+          uris:
+          - bazaar.(( ..cf.cloud_controller.system_domain.value ))
+      bazaar:
+        username: admin
+        password: monkey123
+        helm_chart_dir: /var/vcap/store/repo
+      kibosh:
+        username: admin
+        password: monkey123
+        helm_chart_dir: /var/vcap/store/repo
+        ca_data: (( .properties.ca_data.value ))
+        server: (( .properties.server.value ))
+        token: (( .properties.token.value ))
+        cf:
+          api_url: https://api.(( ..cf.cloud_controller.system_domain.value ))
+          broker_name: bazaar
+          broker_url: https://bazaar-broker.(( ..cf.cloud_controller.system_domain.value ))
+          admin_username: (( ..cf.uaa.system_services_credentials.identity ))
+          admin_password: (( ..cf.uaa.system_services_credentials.password ))
+          skip_ssl_validation: true
+
+  - name: deregistrar
+    templates:
+    - name: delete-all-and-deregister
+      release: kibosh
+    memory: 1024
+    ephemeral_disk: 4096
+    persistent_disk: 4096
+    instances: 1
+    cpu: 2
+    static_ip: 0
+    dynamic_ip: 1
+    default_internet_connected: false
+    max_in_flight: 1
+    properties:
+      broker_name: bazaar
+      disable_ssl_cert_verification: true
+      cf:
+        api_url: https://api.(( ..cf.cloud_controller.system_domain.value ))
+        uaa_url: https://uaa.(( ..cf.cloud_controller.system_domain.value ))
+        admin_username: (( ..cf.uaa.system_services_credentials.identity ))
+        admin_password: (( ..cf.uaa.system_services_credentials.password ))
+
+forms:
+- name: kibosh_config_form
+  label: Kibosh Bazaar Config
+  properties:
+  - name: ca_data
+    type: text
+    label: The PEM encoded Cluster CA certificate
+    description: -----BEGIN CERTIFICATE-----.....
+  - name: server
+    type: string
+    label: K8S API endpoint
+    description: For example, https://192.168.1.100:8443
+  - name: token
+    type: string
+    label: Token
+    description: Cluster JWT token
