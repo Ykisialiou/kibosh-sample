@@ -4,6 +4,18 @@ icon_file: resources/logo.png
 label: Bazaar
 description: Helm Charts Bazaar
 
+
+properties:
+- name: bazaar_api_credentials
+  type: simple_credentials
+  default:
+    identity: bazaar_api_admin
+
+- name: broker_credentials
+  type: simple_credentials
+  default:
+    identity: broker_admin
+
 packages:
 - name: routing
   type: bosh-release
@@ -48,12 +60,12 @@ packages:
           uris:
           - bazaar.(( ..cf.cloud_controller.system_domain.value ))
       bazaar:
-        username: admin
-        password: monkey123
+        username: (( .properties.bazaar_api_credentials.identity ))
+        password: (( .properties.bazaar_api_credentials.password ))
         helm_chart_dir: /var/vcap/store/repo
       kibosh:
-        username: admin
-        password: monkey123
+        username: (( .properties.broker_credentials.identity ))
+        password: (( .properties.broker_credentials.password ))
         helm_chart_dir: /var/vcap/store/repo
         ca_data: (( .properties.ca_data.value ))
         server: (( .properties.server.value ))
