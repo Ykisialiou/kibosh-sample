@@ -22,7 +22,7 @@ Managing charts:
 
 ```bash
 ./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' list
-./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' save ~/workspace/kibosh-sample/sample-charts/mysql-0.8.2.tgz
+./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' save ./sample-charts/mysql-0.8.2.tgz
 
 ./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' list
 
