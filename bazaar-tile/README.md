@@ -21,14 +21,14 @@ experiment around dynamically managing charts.
 Managing charts:
 
 ```bash
-./bazaarcli.mac -t http://bazaar.v3.pcfdev.io -u admin -p 'monkey123' list
-./bazaarcli.mac -t http://bazaar.v3.pcfdev.io -u admin -p 'monkey123' save ~/workspace/kibosh-sample/sample-charts/mysql-0.8.2.tgz
+./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' list
+./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' save ~/workspace/kibosh-sample/sample-charts/mysql-0.8.2.tgz
 
-./bazaarcli.mac -t http://bazaar.v3.pcfdev.io -u admin -p 'monkey123' list
+./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' list
 
 cf enable-service-access mysql
 cf marketplace
 
-./bazaarcli.mac -t http://bazaar.v3.pcfdev.io -u admin -p 'monkey123' delete mysql
+./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' delete mysql
 cf marketplace
 ```
