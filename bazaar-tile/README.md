@@ -32,3 +32,5 @@ cf marketplace
 ./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' delete mysql
 cf marketplace
 ```
+
+Be sure to visit the [Kibosh readme](https://github.com/cf-platform-eng/kibosh/blob/master/README.md) for more details, taking special note of the details on [setting up Kibosh charts](https://github.com/cf-platform-eng/kibosh#changes-required-in-chart)
