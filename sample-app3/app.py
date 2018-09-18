@@ -4,10 +4,18 @@ import json
 import prometheus_client
 
 import flask
+from flask_httpauth import HTTPBasicAuth
 
 import db
 
 app = flask.Flask(__name__)
+auth = HTTPBasicAuth()
+
+users = {
+    "admin": "springone",
+}
+
+next_id = 3
 
 memory_db = [
     {
@@ -26,6 +34,11 @@ memory_db = [
     },
 ]
 
+@auth.get_password
+def get_pw(username):
+    if username in users:
+        return users.get(username)
+    return None
 
 @app.route("/")
 def index():
@@ -57,19 +70,25 @@ def vote_down(id):
 
 
 @app.route("/upload", methods=['POST'])
+@auth.login_required
 def upload():
+    global next_id
     description = flask.request.form.get("description", "").strip()
     file = flask.request.files['upload_file']
-    print("description", description)
-    print("file", file)
-    print("file.filename", file.filename)
-    print("current folder", os.listdir('.'))
 
     file.save(os.path.join(".", "static", "images", file.filename))
 
     memory_db.append(
-
+        {
+            "id": next_id,
+            "description": description,
+            "image_path": file.filename,
+            "votes_up": 0,
+            "votes_down": 0,
+        }
     )
+
+    next_id += 1
 
     return flask.redirect("/")
 

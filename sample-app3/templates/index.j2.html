@@ -12,6 +12,7 @@
 
         .img {
             max-height: 150px;
+            max-width: 150px;
         }
 
         .entry {
@@ -49,10 +50,10 @@
             {{item.votes_net}}
             <a href="/vote_down/{{item.id}}" class="arrow">&#8609;</a>
         </div>
-        <div class="two columns">
+        <div class="three columns">
             <img src="static/images/{{item.image_path}}" class="img"/>
         </div>
-        <div class="nine columns">
+        <div class="eight columns">
             {{item.description}}
         </div>
     </div>

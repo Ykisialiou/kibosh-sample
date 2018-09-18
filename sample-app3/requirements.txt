@@ -2,3 +2,4 @@ flask>=0.12.2
 requests>=2.9.1
 mysql-connector==2.1.4
 prometheus_client>=0.3.0
+flask-httpauth=3.2.4
