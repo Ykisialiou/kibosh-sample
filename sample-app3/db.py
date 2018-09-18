@@ -39,7 +39,7 @@ class DB:
 
     def is_memory_db(self):
         vcap_service = json.loads(os.environ.get('VCAP_SERVICES', "{}"))
-        if vcap_service.get("mysql", ""):
+        if vcap_service.get("mysql", None):
             return False
         return True
 

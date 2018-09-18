@@ -51,7 +51,7 @@
             <a href="/vote_down/{{item.id}}" class="arrow">&#8609;</a>
         </div>
         <div class="three columns">
-            <img src="static/images/{{item.image_path}}" class="img"/>
+            <img src="/get-image/{{item.image_path}}" class="img"/>
         </div>
         <div class="eight columns">
             {{item.description}}
@@ -75,6 +75,14 @@
 
         <input class="button-primary" type="submit">
     </form>
+
+    <div class="spacer"></div>
+    <hr/>
+    <h5>Services Used</h5>
+    {% if not dbtype %}
+     <img src="static/images/mysql.png" class="img"/>
+    {% endif %}
+
 
 </div>
 </body>

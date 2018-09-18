@@ -2,11 +2,15 @@ import os
 import traceback
 import json
 import prometheus_client
+import mimetypes
+from flask import send_file
+from flask import make_response
 
 import flask
 from flask_httpauth import HTTPBasicAuth
 
 import db
+import image
 
 app = flask.Flask(__name__)
 auth = HTTPBasicAuth()
@@ -31,8 +35,15 @@ def index():
         entry["votes_net"] = entry["votes_up"] - entry["votes_down"]
     entries.sort(key=lambda x: x["votes_net"], reverse=True)
 
-    return flask.render_template('index.j2.html', entries=entries, error=error)
+    return flask.render_template('index.j2.html', entries=entries, dbtype=app.db.in_memory, error=error)
 
+@app.route("/get-image/<string:path>")
+def get_image(path):
+    binary_image = app.image.get_image(path)
+    response = make_response(binary_image)
+    response.headers['Content-Type'] = mimetypes.guess_type(path, strict=True)
+    response.headers['Content-Disposition'] = 'inline; filename=%s' % path
+    return response
 
 @app.route("/vote_up/<int:id>", methods=['GET'])
 def vote_up(id):
@@ -53,7 +64,8 @@ def upload():
     description = flask.request.form.get("description", "").strip()
     file = flask.request.files['upload_file']
 
-    file.save(os.path.join(".", "static", "images", file.filename))
+    app.image.save_image(file)
+#    file.save(os.path.join(".", "static", "images", file.filename))
 
     entry = {
         "description": description,
@@ -69,6 +81,7 @@ def upload():
 if __name__ == "__main__":
     try:
         app.db = db.DB()
+        app.image = image.Image()
         app.db.bootstrap()
 
         app.run(host='0.0.0.0', port=int(os.getenv('PORT', '8080')))
