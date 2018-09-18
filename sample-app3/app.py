@@ -15,24 +15,6 @@ users = {
     "admin": "springone",
 }
 
-next_id = 3
-
-memory_db = [
-    {
-        "id": 1,
-        "description": "Dog in cow's clothing",
-        "image_path": "dog_with_cows.jpg",
-        "votes_up": 2,
-        "votes_down": 1,
-    },
-    {
-        "id": 2,
-        "description": "A rabbit mouse? A rabbit? Hybrid?",
-        "image_path": "rabbit.jpg",
-        "votes_up": 3,
-        "votes_down": 0,
-    },
-]
 
 @auth.get_password
 def get_pw(username):
@@ -40,10 +22,11 @@ def get_pw(username):
         return users.get(username)
     return None
 
+
 @app.route("/")
 def index():
     error = flask.request.args.get("error")
-    entries = memory_db
+    entries = app.db.list()
     for entry in entries:
         entry["votes_net"] = entry["votes_up"] - entry["votes_down"]
     entries.sort(key=lambda x: x["votes_net"], reverse=True)
@@ -53,19 +36,13 @@ def index():
 
 @app.route("/vote_up/<int:id>", methods=['GET'])
 def vote_up(id):
-    # todo: push this into db
-    for entry in memory_db:
-        if entry["id"] == id:
-            entry["votes_up"] += 1
+    app.db.vote_up(id)
     return flask.redirect("/")
 
 
 @app.route("/vote_down/<int:id>", methods=['GET'])
 def vote_down(id):
-    # todo: push this into db
-    for entry in memory_db:
-        if entry["id"] == id:
-            entry["votes_down"] += 1
+    app.db.vote_down(id)
     return flask.redirect("/")
 
 
@@ -78,23 +55,22 @@ def upload():
 
     file.save(os.path.join(".", "static", "images", file.filename))
 
-    memory_db.append(
-        {
-            "id": next_id,
-            "description": description,
-            "image_path": file.filename,
-            "votes_up": 0,
-            "votes_down": 0,
-        }
-    )
-
-    next_id += 1
+    entry = {
+        "description": description,
+        "image_path": file.filename,
+        "votes_up": 0,
+        "votes_down": 0,
+    }
+    app.db.insert(entry)
 
     return flask.redirect("/")
 
 
 if __name__ == "__main__":
     try:
+        app.db = db.DB()
+        app.db.bootstrap()
+
         app.run(host='0.0.0.0', port=int(os.getenv('PORT', '8080')))
         print("Exited normally")
     except:
