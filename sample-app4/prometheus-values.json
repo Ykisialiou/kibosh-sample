@@ -1,0 +1,33 @@
+{
+  "serverFiles": {
+    "alerts": {},
+    "rules": {},
+    "prometheus.yml": {
+      "rule_files": [
+        "/etc/config/rules",
+        "/etc/config/alerts"
+      ],
+      "scrape_configs": [
+        {
+          "job_name": "prometheus",
+          "static_configs": [
+            {
+              "targets": [
+                "localhost:9090"
+              ]
+            }
+          ]
+        },
+        {"job_name": "metric-generator",
+          "static_configs": [
+            {
+              "targets": [
+                "metric-generator.apps.rosemead.cf-app.com"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

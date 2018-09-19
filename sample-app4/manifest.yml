@@ -1,0 +1,4 @@
+---
+applications:
+- name: metric-generator
+  buildpack: python_buildpack
