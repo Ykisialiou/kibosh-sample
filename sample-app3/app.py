@@ -35,7 +35,7 @@ def index():
         entry["votes_net"] = entry["votes_up"] - entry["votes_down"]
     entries.sort(key=lambda x: x["votes_net"], reverse=True)
 
-    return flask.render_template('index.j2.html', entries=entries, dbtype=app.db.in_memory, error=error)
+    return flask.render_template('index.j2.html', entries=entries, dbtype=app.db.in_memory, disktype=app.image.on_disk, error=error)
 
 @app.route("/get-image/<string:path>")
 def get_image(path):

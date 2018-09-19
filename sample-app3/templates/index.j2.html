@@ -15,6 +15,11 @@
             max-width: 150px;
         }
 
+        .serviceimg {
+            max-height: 50px;
+            max-width: 50px;
+        }
+
         .entry {
             margin-bottom: 10px;
         }
@@ -40,7 +45,20 @@
     </div>
     {% endif %}
 
-    <h2>Kibosh "r/awww" Example</h2>
+    <div class="row">
+        <div class="eight columns">
+            <h2>Kibosh "r/awww" Example</h2>
+        </div>
+        <div class="four columns">
+            {% if not dbtype %}
+                <img src="static/images/mysql.png" class="serviceimg"/>
+            {% endif %}
+            {% if not disktype %}
+                <img src="static/images/minio.png" class="serviceimg"/>
+            {% endif %}
+        </div>
+    </div>
+
 
 
     {% for item in entries %}
@@ -75,14 +93,6 @@
 
         <input class="button-primary" type="submit">
     </form>
-
-    <div class="spacer"></div>
-    <hr/>
-    <h5>Services Used</h5>
-    {% if not dbtype %}
-     <img src="static/images/mysql.png" class="img"/>
-    {% endif %}
-
 
 </div>
 </body>
