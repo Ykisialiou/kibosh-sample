@@ -80,8 +80,8 @@ def upload():
 
 if __name__ == "__main__":
     try:
-        app.db = db.DB()
-        app.image = image.Image()
+        app.db = db.newDB()
+        app.image = image.new_image()
         app.db.bootstrap()
 
         app.run(host='0.0.0.0', port=int(os.getenv('PORT', '8080')))

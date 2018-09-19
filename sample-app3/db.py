@@ -28,20 +28,24 @@ seed_data = [
 ]
 
 
-class DB:
-    def __init__(self):
-        self.in_memory = self.is_memory_db()
-        if self.in_memory:
-            self.memory_db = []
-            self.next_id = 0
-        else:
-            self.credentials = self.get_credentials_from_env()
+def newDB():
+    if is_memory_db():
+        return DBMemory()
+    else:
+        return DBMysql()
 
-    def is_memory_db(self):
-        vcap_service = json.loads(os.environ.get('VCAP_SERVICES', "{}"))
-        if vcap_service.get("mysql", None):
-            return False
-        return True
+
+def is_memory_db():
+    vcap_service = json.loads(os.environ.get('VCAP_SERVICES', "{}"))
+    if vcap_service.get("mysql", None):
+        return False
+    return True
+
+
+class DBMysql:
+    def __init__(self):
+        self.credentials = self.get_credentials_from_env()
+        self.in_memory = False
 
     def __begin_tx(self):
         self.connection = db.connect(**self.credentials)
@@ -61,31 +65,12 @@ class DB:
         self.__end_tx()
 
     def bootstrap(self):
-        if not self.in_memory:
-            self.write_schema()
+        self.write_schema()
         if len(self.list()) == 0:
             for entry in seed_data:
                 self.insert(entry)
 
     def insert(self, entry):
-        if self.in_memory:
-            self.insert_memory(entry)
-        else:
-            self.insert_mysql(entry)
-
-    def insert_memory(self, entry):
-        self.memory_db.append(
-            {
-                "id": self.next_id,
-                "description": entry["description"],
-                "image_path": entry["image_path"],
-                "votes_up": entry["votes_up"],
-                "votes_down": entry["votes_down"]
-            }
-        )
-        self.next_id += 1
-
-    def insert_mysql(self, entry):
         self.__begin_tx()
         raw_sql = """
         insert into kibosh(description, image_path, votes_up, votes_down)
@@ -95,9 +80,6 @@ class DB:
         self.__end_tx()
 
     def list(self):
-        if self.in_memory:
-            return self.memory_db
-
         self.__begin_tx()
         self.cursor.execute("select * from kibosh")
         rows = self.cursor.fetchall()
@@ -106,26 +88,16 @@ class DB:
         return rows
 
     def vote_up(self, id):
-        if self.in_memory:
-            for entry in self.memory_db:
-                if entry["id"] == id:
-                    entry["votes_up"] += 1
-        else:
-            self.__begin_tx()
-            raw_sql = """update kibosh set votes_up = votes_up + 1 where id = %(id)s"""
-            self.cursor.execute(raw_sql, {"id": id})
-            self.__end_tx()
+        self.__begin_tx()
+        raw_sql = """update kibosh set votes_up = votes_up + 1 where id = %(id)s"""
+        self.cursor.execute(raw_sql, {"id": id})
+        self.__end_tx()
 
     def vote_down(self, id):
-        if self.in_memory:
-            for entry in self.memory_db:
-                if entry["id"] == id:
-                    entry["votes_down"] += 1
-        else:
-            self.__begin_tx()
-            raw_sql = """update kibosh set votes_down = votes_down + 1 where id = %(id)s"""
-            self.cursor.execute(raw_sql, {"id": id})
-            self.__end_tx()
+        self.__begin_tx()
+        raw_sql = """update kibosh set votes_down = votes_down + 1 where id = %(id)s"""
+        self.cursor.execute(raw_sql, {"id": id})
+        self.__end_tx()
 
     def get_credentials_from_env(self):
         vcap_service = json.loads(os.environ['VCAP_SERVICES'])
@@ -141,3 +113,40 @@ class DB:
             'password': secrets["data"]["mysql-root-password"],
             'port': services["spec"]["ports"][0]["port"]
         }
+
+
+class DBMemory:
+    def __init__(self):
+        self.memory_db = []
+        self.next_id = 0
+        self.in_memory = True
+
+    def bootstrap(self):
+        if len(self.list()) == 0:
+            for entry in seed_data:
+                self.insert(entry)
+
+    def insert(self, entry):
+        self.memory_db.append(
+            {
+                "id": self.next_id,
+                "description": entry["description"],
+                "image_path": entry["image_path"],
+                "votes_up": entry["votes_up"],
+                "votes_down": entry["votes_down"]
+            }
+        )
+        self.next_id += 1
+
+    def list(self):
+        return self.memory_db
+
+    def vote_up(self, id):
+        for entry in self.memory_db:
+            if entry["id"] == id:
+                entry["votes_up"] += 1
+
+    def vote_down(self, id):
+        for entry in self.memory_db:
+            if entry["id"] == id:
+                entry["votes_down"] += 1
