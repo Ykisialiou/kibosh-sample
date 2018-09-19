@@ -1,5 +1,5 @@
 ---
 applications:
-- name: sp1-cute
+- name: cute
   buildpack: python_buildpack
   services:
