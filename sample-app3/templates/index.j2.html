@@ -29,11 +29,19 @@
             font-size: larger;
         }
 
+        .description {
+            margin-bottom: 0;
+        }
+
+        .formTitleBottom {
+            margin-bottom: 0;
+        }
+
         div.spacer {
             height: 20px;
         }
     </style>
-    <title>Kibosh Example</title>
+    <title>Rate the Animals</title>
 </head>
 <body>
 <div class="container">
@@ -47,7 +55,7 @@
 
     <div class="row">
         <div class="eight columns">
-            <h2>Kibosh "r/awww" Example</h2>
+            <h2>Rate the Animals!</h2>
         </div>
         <div class="four columns">
             {% if not dbtype %}
@@ -60,40 +68,45 @@
     </div>
 
 
+    <div class="row">
+        <div class="six columns">
+            {% for item in entries %}
+                <div class="row entry">
+                    <div class="one column">
+                        <a href="/vote_up/{{ item.id }}" class="arrow">&#8607;</a>
+                        {{ item.votes_net }}
+                        <a href="/vote_down/{{ item.id }}" class="arrow">&#8609;</a>
+                    </div>
+                    <div class="eleven columns">
+                        <p class="description">{{ item.description }}</p>
+                        <img src="/get-image/{{ item.image_path }}" class="img"/>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
 
-    {% for item in entries %}
-    <div class="row entry">
-        <div class="one column">
-            <a href="/vote_up/{{item.id}}" class="arrow">&#8607;</a>
-            {{item.votes_net}}
-            <a href="/vote_down/{{item.id}}" class="arrow">&#8609;</a>
-        </div>
-        <div class="three columns">
-            <img src="/get-image/{{item.image_path}}" class="img"/>
-        </div>
-        <div class="eight columns">
-            {{item.description}}
+        <div class="one column">&nbsp;</div>
+
+        <div class="five columns">
+            <h5 class="formTitleBottom">Upload New Entry</h5>
+
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                    <label for="description">Description</label>
+                    <input class="u-full-width" type="text" id="description" name="description">
+                </div>
+                <div class="row">
+                    <input type="file" id="upload_file" name="upload_file"/>
+                </div>
+
+                <input class="button-primary" type="submit">
+            </form>
         </div>
     </div>
-    {% endfor %}
+
 
     <div class="spacer"></div>
     <hr/>
-
-    <h4>Upload New Entry</h4>
-
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        <div class="row">
-            <label for="description">Description</label>
-            <input class="u-full-width" type="text" id="description" name="description">
-        </div>
-        <div class="row">
-            <input type="file" id="upload_file" name="upload_file"/>
-        </div>
-
-        <input class="button-primary" type="submit">
-    </form>
-
     <div class="row">
         Using this app is good for you, as
         <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0046362">proved by science!</a>

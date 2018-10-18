@@ -1,5 +1,5 @@
 ---
 applications:
-- name: cute
+- name: animals
   buildpack: python_buildpack
   services:
