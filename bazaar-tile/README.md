@@ -5,7 +5,7 @@ experiment around dynamically managing charts.
 
 ### Installation
 
-* Download [bazaar-chart-0.0.3.pivotal](https://storage.googleapis.com/kibosh-public/bazaar-chart-0.0.3.pivotal)
+* Download [bazaar-chart-0.0.4.pivotal](https://storage.googleapis.com/kibosh-public/bazaar-chart-0.0.4.pivotal)
 * Upload to an Ops Manager
 * Configure tile with PKS cluster creds
     - The PEM encoded Cluster CA certificate
