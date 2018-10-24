@@ -21,15 +21,16 @@ experiment around dynamically managing charts.
 Managing charts:
 
 ```bash
-./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' list
-./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' save ./sample-charts/mysql-0.8.2.tgz
 
-./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' list
+./bazaarcli.mac offer list -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123'
+./bazaarcli.mac offer save -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' ./sample-charts/mysql-0.8.2.tgz
+
+./bazaarcli.mac offer list -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123'
 
 cf enable-service-access mysql
 cf marketplace
 
-./bazaarcli.mac -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' delete mysql
+./bazaarcli.mac offer delete -t http://bazaar.$SYSTEM_DOMAIN -u admin -p 'monkey123' mysql
 cf marketplace
 ```
 
