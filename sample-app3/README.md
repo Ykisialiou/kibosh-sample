@@ -1,7 +1,4 @@
 
-# Sample App 3
+# Rate the Animals App
 
-### Pre-check
-- [ ] Basic auth
-- [ ] Deploy against planned environment to ensure that runtime.txt contains a valid Python 3.x version
-
+This app was used to demonstrate PKS services.   It displays a list of animal pictures, allowing users to rate the pictures. It 'cf push's and runs as a stand-alone app, but if bound to MySql and Minio it will use those services. 
