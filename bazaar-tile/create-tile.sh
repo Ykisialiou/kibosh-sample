@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-kibosh_version=0.0.106
+kibosh_version=0.1.3
 kibosh_release_path=./resources/kibosh-release-${kibosh_version}.tgz
 if [ -f "${kibosh_release_path}" ]; then
     echo " kibosh release tgz already exists, skipping download"

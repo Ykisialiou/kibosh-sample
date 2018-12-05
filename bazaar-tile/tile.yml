@@ -23,7 +23,7 @@ packages:
 
 - name: bazaar
   type: bosh-release
-  path: resources/kibosh-release-0.0.106.tgz
+  path: resources/kibosh-release-0.1.3.tgz
   jobs:
   - name: kibosh
     templates:
