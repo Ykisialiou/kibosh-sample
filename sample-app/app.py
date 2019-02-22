@@ -53,7 +53,7 @@ def metrics():
 
 def get_credentials_from_env():
     vcap_service = json.loads(os.environ['VCAP_SERVICES'])
-    my_sql = vcap_service['mysql'][0]
+    my_sql = vcap_service['mysql-instance'][0]
     secrets = my_sql["credentials"]["secrets"][0]
     services = my_sql["credentials"]["services"][0]
 
