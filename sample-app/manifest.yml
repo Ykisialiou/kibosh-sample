@@ -3,4 +3,4 @@ applications:
 - name: kibosh-mysql-consumer
   buildpack: python_buildpack
   services:
-    - mysql-small
+    - mysql-instance
