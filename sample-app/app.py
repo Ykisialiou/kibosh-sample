@@ -1,4 +1,5 @@
 import os
+import sys
 import traceback
 import json
 import prometheus_client
@@ -53,7 +54,15 @@ def metrics():
 
 def get_credentials_from_env():
     vcap_service = json.loads(os.environ['VCAP_SERVICES'])
-    my_sql = vcap_service['mysql-instance'][0]
+    my_sql = None
+    for service in vcap_service:
+        service = vcap_service[service][0]
+        if service["name"] == "mysql-instance":
+            my_sql = service
+    if not my_sql:
+        print("A service named mysql-instance was not found", file=sys.stderr)
+        sys.exit(1)
+
     secrets = my_sql["credentials"]["secrets"][0]
     services = my_sql["credentials"]["services"][0]
 
